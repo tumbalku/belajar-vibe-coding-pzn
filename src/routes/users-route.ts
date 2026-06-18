@@ -54,6 +54,9 @@ export const usersRoute = new Elysia({ prefix: "/api" }).post(
     }
     
     const token = authHeader.split(" ")[1];
+    if (!token) {
+      throw new Error("Unauthorized");
+    }
     const result = await getCurrentUser(token);
     
     set.status = 200;
@@ -74,6 +77,9 @@ export const usersRoute = new Elysia({ prefix: "/api" }).post(
     }
     
     const token = authHeader.split(" ")[1];
+    if (!token) {
+      throw new Error("Unauthorized");
+    }
     const result = await logoutUser(token);
     
     set.status = 200;
