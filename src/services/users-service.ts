@@ -54,3 +54,23 @@ export const loginUser = async (payload: any) => {
 
   return { data: "OK" };
 };
+
+export const getCurrentUser = async (token: string) => {
+  const sessionRecord = await db.select().from(sessions).where(eq(sessions.token, token));
+  if (sessionRecord.length === 0) {
+    throw new Error("Unauthorized");
+  }
+
+  const userRecord = await db.select().from(users).where(eq(users.id, sessionRecord[0].userId));
+  if (userRecord.length === 0) {
+    throw new Error("Unauthorized");
+  }
+
+  const user = userRecord[0];
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    created_at: user.createdAt,
+  };
+};
